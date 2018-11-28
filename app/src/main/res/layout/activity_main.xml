@@ -10,15 +10,15 @@
         android:id="@+id/Background"
         android:layout_width="390dp"
         android:layout_height="511dp"
-        android:layout_marginTop="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/screen_background_dark"
-        tools:layout_editor_absoluteX="0dp" />
+        app:srcCompat="@android:drawable/screen_background_dark" />
 
     <Button
         android:id="@+id/Search Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100"
+        android:layout_height="50"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="148dp"
