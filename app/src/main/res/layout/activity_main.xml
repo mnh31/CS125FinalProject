@@ -10,9 +10,10 @@
         android:id="@+id/Background"
         android:layout_width="390dp"
         android:layout_height="511dp"
+        android:layout_marginTop="200dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/screen_background_dark"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/Search Button"
@@ -49,5 +50,12 @@
         android:text="   Insert Month Here (1 - 12)"
         tools:layout_editor_absoluteX="18dp"
         tools:layout_editor_absoluteY="261dp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="390dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/New-York-Times-emblem" />
 
 </android.support.constraint.ConstraintLayout>
