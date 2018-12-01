@@ -16,9 +16,9 @@
         app:srcCompat="@android:drawable/screen_background_dark" />
 
     <Button
-        android:id="@+id/Search Button"
-        android:layout_width="100"
-        android:layout_height="50"
+        android:id="@+id/SearchButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="148dp"
@@ -33,29 +33,49 @@
 
     <EditText
         android:id="@+id/YearEdit"
-        android:layout_width="343dp"
-        android:layout_height="51dp"
+        android:layout_width="349dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="132dp"
         android:background="#ffffff"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="   Insert Year Here (1852 - Present)"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="326dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/Background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/MonthEdit"
         android:layout_width="348dp"
         android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="196dp"
         android:background="#ffffff"
         android:text="   Insert Month Here (1 - 12)"
-        tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="261dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="390dp"
-        android:layout_height="200dp"
+        android:layout_width="395dp"
+        android:layout_height="264dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/Background"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/New-York-Times-emblem" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/nyt_logo" />
 
 </android.support.constraint.ConstraintLayout>
