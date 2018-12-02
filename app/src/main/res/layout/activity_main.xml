@@ -8,15 +8,16 @@
 
     <ImageView
         android:id="@+id/Background"
-        android:layout_width="390dp"
-        android:layout_height="511dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/screen_background_dark" />
 
     <Button
-        android:id="@+id/SearchButton"
+        android:id="@+id/searchButton"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
@@ -32,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/YearEdit"
+        android:id="@+id/yearEdit"
         android:layout_width="349dp"
         android:layout_height="52dp"
         android:layout_marginStart="20dp"
@@ -42,15 +43,15 @@
         android:layout_marginBottom="132dp"
         android:background="#ffffff"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="   Insert Year Here (1852 - Present)"
+        android:inputType="number"
+        android:hint="Insert Year Here (1852 - Present)"
         app:layout_constraintBottom_toBottomOf="@+id/Background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/MonthEdit"
+        android:id="@+id/monthEdit"
         android:layout_width="348dp"
         android:layout_height="48dp"
         android:layout_marginStart="20dp"
@@ -59,7 +60,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="196dp"
         android:background="#ffffff"
-        android:text="   Insert Month Here (1 - 12)"
+        android:hint="Insert Month Here (1 - 12)"
+        android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
