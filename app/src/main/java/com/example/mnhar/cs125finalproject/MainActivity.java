@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 String[] yearBefore = yearS.split(",");
                 for (String year : yearBefore) {
                     year = year.trim();
-                    Integer intyear = Integer.parseInt(year);
-                    if (intyear <= 2018 && intyear >= 1852) {
+                    Integer intYear = Integer.parseInt(year);
+                    if (intYear <= 2018 && intYear >= 1852) {
                         years.add(year);
                     }
                 }
@@ -80,18 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     //error message implementation here
                     error.setText("     Please enter valid months and years.");
                 }
-                //Creating a list of all URLs we will need to send a GET request to
-                List<URL> urlList = new ArrayList<>();
-                for (String year : years) {
-                    for (String month : months) {
-                        //try catch in case of invalid URL
-                        try {
-                            urlList.add(new URL (baseURL + year + "/" +  month + urlEnding));
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+               
                 if (!invalidInput) {
                     openSearchActivity();
                     error.setText(" ");
