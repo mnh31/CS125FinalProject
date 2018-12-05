@@ -56,20 +56,24 @@ public class MainActivity extends AppCompatActivity {
                 String[] yearBefore = yearS.split(",");
                 for (String year : yearBefore) {
                     year = year.trim();
+                    Integer intyear = Integer.parseInt(year);
+                    if (intyear <= 2017 && intyear >= 1852) {
+                        years.add(year);
+                    }
                 }
                 for (String month : monthBefore) {
                     month = month.trim();
-                    if (month.length() > 2) {
-                        continue;
-                    } else if (month.length() == 1 && (int) month.charAt(0) >= 49 || (int) month.charAt(0) <= 57) {
-                        months.add(month);
-                    } else if (month.charAt(0) == 49  &&  ((int) month.charAt(1) <= 50 || (int) month.charAt(1) >= 48)) {
+                    Integer monthInt = Integer.parseInt(month);
+                    if (monthInt <= 12 && monthInt >= 1) {
                         months.add(month);
                     }
                 }
+                //check for if months or years (arraylists) are empty and display error message
+                boolean invalidInput = (months.isEmpty() || years.isEmpty());
 
-
-
+                if (invalidInput) {
+                    //Vasu, do error message implementation here 
+                }
                 //Creating a list of all URLs we will need to send a GET request to
                 List<URL> urlList = new ArrayList<>();
                 for (String year : years) {
@@ -97,5 +101,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    
+
 }
