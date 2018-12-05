@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     //error message implementation here
                     error.setText("     Please enter valid months and years.");
                 }
-               
+
                 if (!invalidInput) {
                     openSearchActivity();
                     error.setText(" ");

@@ -3,7 +3,15 @@ package com.example.mnhar.cs125finalproject;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,7 +26,9 @@ public class SearchActivity extends AppCompatActivity {
     private TextView textView; // the TextView box on this activity
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=<dd1044029b4644999f1a7c225dafacca>";
-    List<URL> urlList = new ArrayList<>();
+    List<String> urlList = new ArrayList<>();
+    List<JSONObject> jsonObjects = new ArrayList<>();
+    private static RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +43,36 @@ public class SearchActivity extends AppCompatActivity {
         for (String year : yearArray) {
             for (String month : monthArray) {
                 //try catch for possible failed URL exception
-                try {
-                    urlList.add(new URL(baseURL + year + "/" + month + urlEnding));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-
+                urlList.add(baseURL + year + "/" + month + urlEnding);
+            }
+        }
+        for (String url : urlList) {
+            try {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        Request.Method.GET,
+                        url,
+                        (String) null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(final JSONObject response) {
+                                apiCallDone(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final VolleyError error) {
+                        Log.e("JSON request error", error.toString());
+                    }
+                });
+                jsonObjectRequest.setShouldCache(false);
+                requestQueue.add(jsonObjectRequest);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
+    }
+
+    private void apiCallDone(JSONObject response) {
+        jsonObjects.add(response);
     }
 }
