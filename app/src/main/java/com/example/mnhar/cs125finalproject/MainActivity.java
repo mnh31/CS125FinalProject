@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import org.json.*;
 import com.android.volley.RequestQueue;
 import com.android.volley.Request;
@@ -22,6 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Button searchButton;
+    private TextView error;
     private EditText month;
     private String monthS;
     private EditText year;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        error = findViewById(R.id.errorMessage);
 
         month = findViewById(R.id.monthEdit);
         year = findViewById(R.id.yearEdit);
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 for (String year : yearBefore) {
                     year = year.trim();
                     Integer intyear = Integer.parseInt(year);
-                    if (intyear <= 2017 && intyear >= 1852) {
+                    if (intyear <= 2018 && intyear >= 1852) {
                         years.add(year);
                     }
                 }
@@ -72,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 boolean invalidInput = (months.isEmpty() || years.isEmpty());
 
                 if (invalidInput) {
-                    //Vasu, do error message implementation here 
+                    //error message implementation here
+                    error.setText("     Please enter valid months and years.");
                 }
                 //Creating a list of all URLs we will need to send a GET request to
                 List<URL> urlList = new ArrayList<>();
@@ -86,8 +92,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-                openSearchActivity();
+                if (!invalidInput) {
+                    openSearchActivity();
+                    error.setText(" ");
+                }
             }
         });
     }
