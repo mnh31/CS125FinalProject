@@ -17,10 +17,10 @@ public class SearchActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.textView);
         Intent intent = getIntent();
-        String year = intent.getStringExtra("year_key"); // gets the year as a string from main activity
-        String month = intent.getStringExtra("month_key"); // gets the month as a string from main activity
-        int monthInt = Integer.parseInt(month);
-        textView.setText(monthArray[monthInt] + ", " + year);
+        String[] yearArray = intent.getStringArrayExtra("years"); // gets the year as a string from main activity
+        String[] monthArray = intent.getStringArrayExtra("months"); // gets the month as a string from main activity
+        //int monthInt = Integer.parseInt(month);
+        //textView.setText(monthArray[monthInt] + ", " + year);
 
     }
 }
