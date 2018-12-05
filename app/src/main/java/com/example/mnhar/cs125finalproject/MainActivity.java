@@ -70,7 +70,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //check for if months or years (arraylists) are empty and display error message
                 boolean invalidInput = (months.isEmpty() || years.isEmpty());
-                
+
+                if (invalidInput) {
+                    //Vasu, do error message implementation here 
+                }
                 //Creating a list of all URLs we will need to send a GET request to
                 List<URL> urlList = new ArrayList<>();
                 for (String year : years) {
