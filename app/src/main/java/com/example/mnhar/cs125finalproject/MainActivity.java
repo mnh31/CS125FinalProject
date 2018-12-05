@@ -5,25 +5,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button searchButton;
-    private TextView month;
+    private EditText year;
+    private String yearS;
+    private EditText month;
+    private String monthS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        year = findViewById(R.id.yearEdit);
         month = findViewById(R.id.monthEdit);
-        searchButton = (Button) findViewById(R.id.searchButton);
 
+        searchButton = (Button) findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = month.getText().toString();
+                yearS = year.getText().toString();
+                monthS = month.getText().toString();
                 openSearchActivity();
             }
         });
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void openSearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("year_key", yearS);
+        intent.putExtra("month_key", monthS);
         startActivity(intent);
     }
 }
