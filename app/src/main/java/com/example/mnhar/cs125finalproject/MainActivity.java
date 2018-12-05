@@ -11,15 +11,16 @@ public class MainActivity extends AppCompatActivity {
 
     private Button searchButton;
     private EditText year;
-    private String yearS;
+    private String yearS; // the year entered into the EditText box as a String
     private EditText month;
-    private String monthS;
+    private String monthS; // the month entered into the EditText box as a String
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //year and month EditText boxes.
         year = findViewById(R.id.yearEdit);
         month = findViewById(R.id.monthEdit);
 
@@ -36,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void openSearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra("year_key", yearS);
-        intent.putExtra("month_key", monthS);
+        intent.putExtra("year_key", yearS); // sends the year as a string to search activity
+        intent.putExtra("month_key", monthS); // sends the month as a string to search activity
         startActivity(intent);
     }
 }
