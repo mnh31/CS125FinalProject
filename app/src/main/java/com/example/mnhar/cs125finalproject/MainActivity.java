@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private String yearS;
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=<dd1044029b4644999f1a7c225dafacca>";
+    private ArrayList<String> years = new ArrayList<>();
+    private ArrayList<String> months = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,29 +46,37 @@ public class MainActivity extends AppCompatActivity {
                 yearS = year.getText().toString();
 
                 //NEED TO HANDLE WITH INCORRECT INPUT HERE
-                if (turnMonthToInt(monthS) == "-1") {
-                    //then month in invalid
-                }
+
+                //Validate input, check each for in range and then add to a String[]
+                //Send string array to search activity and deal with there
 
                 //Vasu, started work here on splitting up searches for multiple
                 //months and years. Will be split on commas for now.
-                String[] months = monthS.split(",");
-                String[] years = yearS.split(",'");
-                for (String year : years) {
+                String[] monthBefore = monthS.split(",");
+                String[] yearBefore = yearS.split(",");
+                for (String year : yearBefore) {
                     year = year.trim();
                 }
-                for (String month : months) {
+                for (String month : monthBefore) {
                     month = month.trim();
+                    if (month.length() > 2) {
+                        continue;
+                    } else if (month.length() == 1 && (int) month.charAt(0) >= 49 || (int) month.charAt(0) <= 57) {
+                        months.add(month);
+                    } else if (month.charAt(0) == 49  &&  ((int) month.charAt(1) <= 50 || (int) month.charAt(1) >= 48)) {
+                        months.add(month);
+                    }
                 }
+
+
 
                 //Creating a list of all URLs we will need to send a GET request to
                 List<URL> urlList = new ArrayList<>();
                 for (String year : years) {
                     for (String month : months) {
-                        String monthAsInt = turnMonthToInt(month);
                         //try catch in case of invalid URL
                         try {
-                            urlList.add(new URL (baseURL + year + "/" +  monthAsInt + urlEnding));
+                            urlList.add(new URL (baseURL + year + "/" +  month + urlEnding));
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
@@ -82,39 +92,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("year_key", yearS);
         intent.putExtra("month_key", monthS);
+        intent.putExtra("months_key", months.toArray());
+        intent.putExtra("years_key", years.toArray());
         startActivity(intent);
     }
 
-    //made method for converting the months to int representation in a string so I can add to URL
-    private String turnMonthToInt(String month) {
-        month = month.toLowerCase().trim();
-        switch (month) {
-            case "january":
-                return "1";
-            case "february":
-                return "2";
-            case "march":
-                return "3";
-            case "april":
-                return "4";
-            case "may":
-                return "5";
-            case "june":
-                return "6";
-            case "july":
-                return "7";
-            case "august":
-                return "8";
-            case "september":
-                return "9";
-            case "october":
-                return "10";
-            case "november":
-                return "11";
-            case "december":
-                return "12";
-            default:
-                return "-1";
-        }
-    }
+    
 }
