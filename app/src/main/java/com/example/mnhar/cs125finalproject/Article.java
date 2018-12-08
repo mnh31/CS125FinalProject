@@ -1,6 +1,7 @@
 package com.example.mnhar.cs125finalproject;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Article {
@@ -12,7 +13,14 @@ public class Article {
     public String headline;
     public JSONArray keywords;
 
-    Article (String url, String snippet, String leadParagraph, String anAbstract, String articleHeadline) {
-
+    Article (JSONObject individualArticle) throws JSONException {
+        url = individualArticle.getString("web_url");
+        snippet = individualArticle.getString("snippet");
+        leadParagraph = individualArticle.getString("lead_paragraph");
+        articleAbstract = individualArticle.getString("abstract");
+        //can possibly add multimedia (thumbnails pics etc) here if we have time
+        JSONObject headline1 = individualArticle.getJSONObject("headline");
+        headline = headline1.getString("main");
+        keywords = individualArticle.getJSONArray("keywords");
     }
 }

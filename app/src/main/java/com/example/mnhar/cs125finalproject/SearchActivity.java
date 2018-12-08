@@ -97,18 +97,9 @@ public class SearchActivity extends AppCompatActivity {
         } catch (JSONException ignored) {}
     }
 
-    private void displayInfoForArticle(JSONArray articles) throws JSONException {
+    private void takeInInfoForArticles(JSONArray articles) throws JSONException {
         for (int i = 0; i < articles.length(); i++) {
-            JSONObject individualArticle = articles.getJSONObject(i);
-            String articleURL = individualArticle.getString("web_url");
-            String articleSnippet = individualArticle.getString("snippet");
-            String articleLeadParagraph = individualArticle.getString("lead_paragraph");
-            String articleAbstract = individualArticle.getString("abstract");
-            //can possibly add multimedia (thumbnails pics etc) here if we have time
-            JSONObject headline = individualArticle.getJSONObject("headline");
-            String articleHeadline = headline.getString("main");
-            JSONArray keywords = individualArticle.getJSONArray("keywords");
-            articleList.add(new Article(articleURL, articleSnippet, articleLeadParagraph, articleAbstract, articleHeadline));
+            articleList.add(new Article(articles.getJSONObject(i)));
         }
     }
 }
