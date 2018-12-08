@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
     private TextView textView2;
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
-    List<String> urlList = new ArrayList<>();
+    List<Article> articleList = new ArrayList<>();
     List<JSONObject> jsonObjects = new ArrayList<>();
     private String url;
     private String toPrint;
@@ -96,10 +96,9 @@ public class SearchActivity extends AppCompatActivity {
         } catch (JSONException ignored) {}
     }
 
-    private void displayInfoForArticle(JSONArray articles) throws JSONException {
+    private void takeInInfoForArticles(JSONArray articles) throws JSONException {
         for (int i = 0; i < articles.length(); i++) {
-            JSONObject article = articles.getJSONObject(i);
-            String articleURL = article.getString("web_url");
+            articleList.add(new Article(articles.getJSONObject(i)));
         }
     }
 }
