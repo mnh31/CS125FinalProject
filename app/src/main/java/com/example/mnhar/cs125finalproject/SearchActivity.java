@@ -29,6 +29,8 @@ public class SearchActivity extends AppCompatActivity {
     private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
     List<String> urlList = new ArrayList<>();
     List<JSONObject> jsonObjects = new ArrayList<>();
+    private String url;
+    private String toPrint;
     private static RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,24 +38,31 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         textView = findViewById(R.id.textView);
+        textView2 = findViewById(R.id.textView2);
         
         Intent intent = getIntent();
-        String[] yearArray = intent.getStringArrayExtra("years_key"); // gets the year as a string from main activity
-        String[] monthArray = intent.getStringArrayExtra("months_key"); // gets the month as a string from main activity
+        String year = intent.getStringExtra("year_key"); // gets the year as an array from main activity
+        String month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
         //int monthInt = Integer.parseInt(month);
         //textView.setText(monthArray[monthInt] + ", " + year);
-        for (String year : yearArray) {
+        /*for (String year : yearArray) {
             for (String month : monthArray) {
                 //try catch for possible failed URL exception
                 urlList.add(baseURL + year + "/" + month + urlEnding);
             }
-        }
-        for (String url : urlList) {
+        }*/
+        url = baseURL + year + "/" + month + urlEnding;
+        startApicall(url);
+        textView2.setTextSize(50);
+        textView2.setText(toPrint);
+
+    }
+    private void startApicall(String url) {
             try {
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.GET,
                         url,
-                        (String) null,
+                        null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {
@@ -70,11 +79,12 @@ public class SearchActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
     }
 
     private void apiCallDone(JSONObject response) {
-        jsonObjects.add(response);
+        //jsonObjects.add(response);
+        try {
+            toPrint = response.get("copyright").toString();
+        } catch (JSONException ignored) {}
     }
 }

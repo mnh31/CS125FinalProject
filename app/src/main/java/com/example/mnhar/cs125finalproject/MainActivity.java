@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 //check for if months or years (arraylists) are empty and display error message
-                boolean invalidInput = (months.isEmpty() || years.isEmpty());
+                boolean invalidInput = (months.isEmpty() || years.isEmpty() || months == null || years == null);
 
                 if (invalidInput) {
                     //error message implementation here
