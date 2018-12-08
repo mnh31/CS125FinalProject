@@ -80,7 +80,6 @@ public class SearchActivity extends AppCompatActivity {
                 jsonObjectRequest.setShouldCache(false);
                 requestQueue.add(jsonObjectRequest);
             } catch (Exception e) {
-                Log.e("caught an error", "caught an error");
                 e.printStackTrace();
             }
     }
