@@ -52,12 +52,12 @@ public class SearchActivity extends AppCompatActivity {
             }
         }*/
         url = baseURL + year + "/" + month + urlEnding;
-        startApicall(url);
+        startApiCall(url);
         textView2.setTextSize(50);
-        textView2.setText(toPrint);
+        textView2.setText("This " + toPrint);
 
     }
-    private void startApicall(String url) {
+    private void startApiCall(String url) {
             try {
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.GET,
