@@ -62,7 +62,7 @@ public class SearchActivity extends AppCompatActivity {
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.GET,
                         url,
-                        null,
+                        (JSONObject) null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {
@@ -86,5 +86,12 @@ public class SearchActivity extends AppCompatActivity {
         try {
             toPrint = response.get("copyright").toString();
         } catch (JSONException ignored) {}
+    }
+
+    private void displayInfoForArticle(JSONArray articles) throws JSONException {
+        for (int i = 0; i < articles.length(); i++) {
+            JSONObject article = articles.getJSONObject(i);
+            String articleURL = article.getString("web_url");
+        }
     }
 }
