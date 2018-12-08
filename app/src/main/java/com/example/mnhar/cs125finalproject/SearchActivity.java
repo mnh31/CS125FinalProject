@@ -24,8 +24,9 @@ public class SearchActivity extends AppCompatActivity {
     //An array of the name of the months. First element is not used so that index of element matches the month number.
     private String[] monthArray = new String[]{" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     private TextView textView; // the TextView box on this activity
+    private TextView textView2;
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
-    private String urlEnding = ".json?api-key=<dd1044029b4644999f1a7c225dafacca>";
+    private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
     List<String> urlList = new ArrayList<>();
     List<JSONObject> jsonObjects = new ArrayList<>();
     private static RequestQueue requestQueue;
@@ -35,6 +36,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         textView = findViewById(R.id.textView);
+        
         Intent intent = getIntent();
         String[] yearArray = intent.getStringArrayExtra("years_key"); // gets the year as a string from main activity
         String[] monthArray = intent.getStringArrayExtra("months_key"); // gets the month as a string from main activity
