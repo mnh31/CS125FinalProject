@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
     private TextView textView2;
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
-    List<String> urlList = new ArrayList<>();
+    List<Article> articleList = new ArrayList<>();
     List<JSONObject> jsonObjects = new ArrayList<>();
     private String url;
     private String toPrint;
@@ -108,6 +108,7 @@ public class SearchActivity extends AppCompatActivity {
             JSONObject headline = individualArticle.getJSONObject("headline");
             String articleHeadline = headline.getString("main");
             JSONArray keywords = individualArticle.getJSONArray("keywords");
+            articleList.add(new Article(articleURL, articleSnippet, articleLeadParagraph, articleAbstract, articleHeadline));
         }
     }
 }
