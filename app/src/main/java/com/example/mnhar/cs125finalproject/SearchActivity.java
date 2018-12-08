@@ -83,6 +83,10 @@ public class SearchActivity extends AppCompatActivity {
 
     private void apiCallDone(JSONObject response) {
         //jsonObjects.add(response);
+        JSONObject blankObject = new JSONObject();
+        if (response.equals(blankObject)) {
+            toPrint = "BLANK OBJECT";
+        }
         try {
             toPrint = response.get("copyright").toString();
         } catch (JSONException ignored) {}
