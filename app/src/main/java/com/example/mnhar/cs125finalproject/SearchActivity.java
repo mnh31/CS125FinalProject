@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +36,9 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestQueue = Volley.newRequestQueue(this);
+
         setContentView(R.layout.activity_search);
 
         textView = findViewById(R.id.textView);
@@ -43,8 +47,8 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String year = intent.getStringExtra("year_key"); // gets the year as an array from main activity
         String month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
-        //int monthInt = Integer.parseInt(month);
-        //textView.setText(monthArray[monthInt] + ", " + year);
+        int monthInt = Integer.parseInt(month);
+        textView.setText(monthArray[monthInt] + ", " + year);
         /*for (String year : yearArray) {
             for (String month : monthArray) {
                 //try catch for possible failed URL exception
@@ -54,7 +58,6 @@ public class SearchActivity extends AppCompatActivity {
         url = baseURL + year + "/" + month + urlEnding;
         startApiCall(url);
         textView2.setTextSize(50);
-        textView2.setText("This " + toPrint);
 
     }
     private void startApiCall(String url) {
@@ -77,6 +80,7 @@ public class SearchActivity extends AppCompatActivity {
                 jsonObjectRequest.setShouldCache(false);
                 requestQueue.add(jsonObjectRequest);
             } catch (Exception e) {
+                Log.e("caught an error", "caught an error");
                 e.printStackTrace();
             }
     }
@@ -89,6 +93,7 @@ public class SearchActivity extends AppCompatActivity {
         }
         try {
             toPrint = response.get("copyright").toString();
+            textView2.setText("This " + toPrint);
         } catch (JSONException ignored) {}
     }
 
