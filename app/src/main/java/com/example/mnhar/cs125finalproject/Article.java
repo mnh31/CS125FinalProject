@@ -12,9 +12,11 @@ public class Article {
     //can possibly add multimedia (thumbnails pics etc) here if we have time
     public String headline;
     public String[] keywords;
-    public String date;
+    private String date1;
     public String author;
     public String newsDesk;
+    private String[] dateArray;
+    public String date;
 
     Article (JSONObject individualArticle) throws JSONException {
         url = individualArticle.getString("web_url");
@@ -34,12 +36,16 @@ public class Article {
         }
         keywords = keywords2;
 
-        date = individualArticle.getString("pub_date");
+        //getting only the day from the date string
+        date1 = individualArticle.getString("pub_date");
+        dateArray = date1.split("T");
+        dateArray = dateArray[0].split("-");
+        date = dateArray[2];
 
         JSONObject byline = individualArticle.getJSONObject("byline");
         author = byline.getString("original");
 
-        newsDesk = date = individualArticle.getString("news_desk");
+        newsDesk = individualArticle.getString("news_desk");
         
     }
 }

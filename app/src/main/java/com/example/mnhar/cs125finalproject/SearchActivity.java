@@ -1,9 +1,15 @@
 package com.example.mnhar.cs125finalproject;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.style.UnderlineSpan;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -20,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.*;
 
+import com.example.mnhar.cs125finalproject.Article;
+
 public class SearchActivity extends AppCompatActivity {
 
     //An array of the name of the months. First element is not used so that index of element matches the month number.
@@ -33,6 +41,9 @@ public class SearchActivity extends AppCompatActivity {
     private String url;
     private String toPrint;
     private static RequestQueue requestQueue;
+    private LinearLayout linearLayout;
+    private int monthInt;
+    private String year;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +52,14 @@ public class SearchActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_search);
 
+        linearLayout = findViewById(R.id.myLinearLayout);
         textView = findViewById(R.id.textView);
         textView2 = findViewById(R.id.textView2);
         
         Intent intent = getIntent();
-        String year = intent.getStringExtra("year_key"); // gets the year as an array from main activity
+        year = intent.getStringExtra("year_key"); // gets the year as an array from main activity
         String month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
-        int monthInt = Integer.parseInt(month);
+        monthInt = Integer.parseInt(month);
         textView.setText(monthArray[monthInt] + ", " + year);
         /*for (String year : yearArray) {
             for (String month : monthArray) {
@@ -57,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
         }*/
         url = baseURL + year + "/" + month + urlEnding;
         startApiCall(url);
-        textView2.setTextSize(50);
+        textView2.setTextSize(12);
 
     }
     private void startApiCall(String url) {
@@ -71,7 +83,7 @@ public class SearchActivity extends AppCompatActivity {
                             public void onResponse(final JSONObject response) {
                                 try {
                                     apiCallDone(response);
-                                } catch (JSONException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -88,30 +100,48 @@ public class SearchActivity extends AppCompatActivity {
             }
     }
 
-    private void apiCallDone(JSONObject response) throws JSONException {
-        //jsonObjects.add(response);
-        JSONObject blankObject = new JSONObject();
-        if (response.equals(blankObject)) {
-            toPrint = "BLANK OBJECT";
-        }
+    private void apiCallDone(JSONObject response) {
         try {
             toPrint = response.get("copyright").toString();
-            textView2.setText("This " + toPrint);
+            textView2.setText(toPrint);
+            takeInInfoForArticles(response.getJSONObject("response").getJSONArray("docs"));
+            printInfoFromAllArticles();
+
         } catch (JSONException ignored) {}
-        takeInInfoForArticles(response.getJSONArray("docs"));
-        printInfoFromAllArticles();
+
     }
 
-    private void takeInInfoForArticles(JSONArray articles) throws JSONException {
+    private void takeInInfoForArticles(JSONArray articles){
         for (int i = 0; i < articles.length(); i++) {
-            articleList.add(new Article(articles.getJSONObject(i)));
+            try {
+                articleList.add(new Article(articles.getJSONObject(i)));
+            } catch (Exception e) {
+                continue;
+            }
         }
     }
 
     private void printInfoFromAllArticles() {
+
         for (Article article : articleList) {
-            toPrint = article.headline;
+            TextView current = new TextView(this);
+            String date = monthArray[monthInt] + " " + article.date + ", " + year;
+            current.setLinksClickable(true);
+            current.setAutoLinkMask(Linkify.ALL);
+            current.setLinkTextColor(Color.BLUE);
+            current.setTextSize(15);
+            current.setTextColor(Color.BLACK);
+            current.setText(date + "\n" + article.snippet + "\n" + article.url + "\n");
+            current.setGravity(Gravity.LEFT);
+            current.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            TextView headline = new TextView(this);
+            headline.setTextColor(Color.BLACK);
+            headline.setTextSize(17);
+            headline.setTypeface(null, Typeface.BOLD);
+            headline.setText(article.headline);
+
+            linearLayout.addView(headline);
+            linearLayout.addView(current);
         }
     }
-
 }
