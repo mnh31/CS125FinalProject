@@ -69,7 +69,11 @@ public class SearchActivity extends AppCompatActivity {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {
-                                apiCallDone(response);
+                                try {
+                                    apiCallDone(response);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -84,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
             }
     }
 
-    private void apiCallDone(JSONObject response) {
+    private void apiCallDone(JSONObject response) throws JSONException {
         //jsonObjects.add(response);
         JSONObject blankObject = new JSONObject();
         if (response.equals(blankObject)) {
@@ -94,6 +98,8 @@ public class SearchActivity extends AppCompatActivity {
             toPrint = response.get("copyright").toString();
             textView2.setText("This " + toPrint);
         } catch (JSONException ignored) {}
+        takeInInfoForArticles(response.getJSONArray("docs"));
+        printInfoFromAllArticles();
     }
 
     private void takeInInfoForArticles(JSONArray articles) throws JSONException {
@@ -101,4 +107,11 @@ public class SearchActivity extends AppCompatActivity {
             articleList.add(new Article(articles.getJSONObject(i)));
         }
     }
+
+    private void printInfoFromAllArticles() {
+        for (Article article : articleList) {
+            toPrint = article.headline;
+        }
+    }
+
 }
