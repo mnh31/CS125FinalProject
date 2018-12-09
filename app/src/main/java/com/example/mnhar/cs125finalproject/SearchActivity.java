@@ -33,13 +33,11 @@ public class SearchActivity extends AppCompatActivity {
     //An array of the name of the months. First element is not used so that index of element matches the month number.
     private String[] monthArray = new String[]{" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     private TextView textView; // the TextView box on this activity
-    private TextView textView2;
+    private TextView textView2; // copyright box. maybe remove this?
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
     List<Article> articleList = new ArrayList<>();
-    List<JSONObject> jsonObjects = new ArrayList<>();
     private String url;
-    private String toPrint;
     private static RequestQueue requestQueue;
     private LinearLayout linearLayout;
     private int monthInt;
@@ -61,12 +59,6 @@ public class SearchActivity extends AppCompatActivity {
         String month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
         monthInt = Integer.parseInt(month);
         textView.setText(monthArray[monthInt] + ", " + year);
-        /*for (String year : yearArray) {
-            for (String month : monthArray) {
-                //try catch for possible failed URL exception
-                urlList.add(baseURL + year + "/" + month + urlEnding);
-            }
-        }*/
         url = baseURL + year + "/" + month + urlEnding;
         startApiCall(url);
         textView2.setTextSize(12);
@@ -102,8 +94,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void apiCallDone(JSONObject response) {
         try {
-            toPrint = response.get("copyright").toString();
-            textView2.setText(toPrint);
+            textView2.setText(response.getString("copyright"));
             takeInInfoForArticles(response.getJSONObject("response").getJSONArray("docs"));
             printInfoFromAllArticles();
 
