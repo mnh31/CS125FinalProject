@@ -201,18 +201,19 @@ public class SearchActivity extends AppCompatActivity {
             boolean matchKeyword = false;
             for (String word : keywordSearch) {
                 for(String keyword : article.keywords) {
-                    if (word.equalsIgnoreCase(keyword)) {
-                        matchKeyword = true;
+                    if (word.equalsIgnoreCase(keyword) //if a word they searched in keyword box is equal to a keyword
+                            || keywordSearchInput.equalsIgnoreCase(keyword)) { //or if the whole search is equal to a keyword
+                        matchKeyword = true; //set keyword boolean to true
                     }
                 }
             }
-            for (String word : headlineSearch) {                     //for each word to search
-                if (article.headline.contains(word)) {
-                    matchHeadline = true;
+            for (String word : headlineSearch) {  //for each word to search
+                if (article.headline.contains(word)) { //if the headline contains that word
+                    matchHeadline = true; //set headline boolean to true
                 }
             }
-            if (matchHeadline && matchKeyword) {
-                returnList.add(article);
+            if (matchHeadline && matchKeyword) { //if both headline and keyword booleans are true
+                returnList.add(article); //add it to the return list
             }
         }
         return returnList;
