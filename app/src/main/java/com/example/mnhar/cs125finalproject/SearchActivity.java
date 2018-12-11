@@ -36,7 +36,10 @@ public class SearchActivity extends AppCompatActivity {
     private TextView textView2; // copyright box. maybe remove this?
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
-    List<Article> articleList = new ArrayList<>();
+    private List<Article> completeArticleList = new ArrayList<>();
+    private List<Article> currentArticleDisplayList = new ArrayList<>();
+    private String headlineSearchInput;
+    private String keywordSearchInput;
     private String url;
     private static RequestQueue requestQueue;
     private LinearLayout linearLayout;
@@ -62,6 +65,11 @@ public class SearchActivity extends AppCompatActivity {
         url = baseURL + year + "/" + month + urlEnding;
         startApiCall(url);
         textView2.setTextSize(12);
+
+
+        //Vasu, to implement the search function all you need to do is make two search boxes and a submit button that sets what
+        //is in those boxes to the variables "headlineSearchInput" for a headline Search and "keywordSearchInput" for a keyword search
+        //then you might have to do something like restart the activity to make only the wanted articles appear
 
     }
     private void startApiCall(String url) {
@@ -96,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
         try {
             textView2.setText(response.getString("copyright"));
             takeInInfoForArticles(response.getJSONObject("response").getJSONArray("docs"));
-            printInfoFromAllArticles();
+            printInfoFromArticles();
 
         } catch (JSONException ignored) {}
 
@@ -105,16 +113,31 @@ public class SearchActivity extends AppCompatActivity {
     private void takeInInfoForArticles(JSONArray articles){
         for (int i = 0; i < articles.length(); i++) {
             try {
-                articleList.add(new Article(articles.getJSONObject(i)));
+                completeArticleList.add(new Article(articles.getJSONObject(i)));
             } catch (Exception e) {
                 continue;
             }
         }
     }
 
-    private void printInfoFromAllArticles() {
+    //this function I made to be called before printArticles to determine what currentArticleDisplayList will be
+    private void printInfoFromArticles() {
+        if (headlineSearchInput == null && keywordSearchInput == null) {
+            currentArticleDisplayList = completeArticleList;
+        } else if (headlineSearchInput == null) {
+            currentArticleDisplayList = searchArticles();
+        } else if (keywordSearchInput == null) {
+            currentArticleDisplayList = keywordArticles();
+        } else {
+            currentArticleDisplayList = doubleSearchArticles();
+        }
+        printArticles();
+    }
 
-        for (Article article : articleList) {
+    private void printArticles() {
+
+        // changed this from displaying all articles to whatever we decide "currentArticleDisplayList" is
+        for (Article article : currentArticleDisplayList) {
             TextView current = new TextView(this);
             String date = monthArray[monthInt] + " " + article.date + ", " + year;
             current.setLinksClickable(true);
@@ -134,5 +157,64 @@ public class SearchActivity extends AppCompatActivity {
             linearLayout.addView(headline);
             linearLayout.addView(current);
         }
+    }
+
+    //currently I have different variables for searching headline and searching keywords.
+    //this is the headline function. We can make them the same if we want
+    private List<Article> searchArticles() {
+        List<Article> returnList = new ArrayList<>();
+        for (Article article : completeArticleList) {
+            String[] wordsToSearch = headlineSearchInput.split(" ");  //splitting the search box input upon space to search for individual words
+            for (String word : wordsToSearch) {                     //for each word to search
+                if (article.headline.contains(word)) {              //if the headline contains the word
+                    returnList.add(article);                        //add the article to return list
+                }
+            }
+        }
+        return returnList;
+    }
+
+    //this is the keyword function
+    private List<Article> keywordArticles() {
+        List<Article> returnList = new ArrayList<>();
+        for (Article article : completeArticleList) {
+            String[] wordsToSearch = keywordSearchInput.split(" ");//splitting the search box input upon space to search for individual words
+            for (String word : wordsToSearch) {                     //for each word to search
+                for(String keyword : article.keywords) {            //for each keyword
+                    if (word.equalsIgnoreCase(keyword)              //if the keyword is equal to the word searched
+                            || keywordSearchInput.equalsIgnoreCase(keyword)) { //or if it is equal to the whole keyword search
+                        returnList.add(article);                    //add article to return list
+                    }
+                }
+            }
+        }
+        return returnList;
+    }
+
+    //this is the function for if they have both a keyword and headline Search;
+    private List<Article> doubleSearchArticles() {
+        List<Article> returnList = new ArrayList<>();
+        for (Article article : completeArticleList) {
+            String[] headlineSearch = headlineSearchInput.split(" ");        //splitting the headline search box input upon space to search for individual words
+            String[] keywordSearch = keywordSearchInput.split(" ");  //splitting the keyword search box input upon space to search
+            boolean matchHeadline = false;
+            boolean matchKeyword = false;
+            for (String word : keywordSearch) {
+                for(String keyword : article.keywords) {
+                    if (word.equalsIgnoreCase(keyword)) {
+                        matchKeyword = true;
+                    }
+                }
+            }
+            for (String word : headlineSearch) {                     //for each word to search
+                if (article.headline.contains(word)) {
+                    matchHeadline = true;
+                }
+            }
+            if (matchHeadline && matchKeyword) {
+                returnList.add(article);
+            }
+        }
+        return returnList;
     }
 }
