@@ -125,13 +125,13 @@ public class SearchActivity extends AppCompatActivity {
         if (headlineSearchInput == null && keywordSearchInput == null) {
             currentArticleDisplayList = completeArticleList;
         } else if (headlineSearchInput == null) {
-            currentArticleDisplayList = searchArticles();
+            currentArticleDisplayList = searchArticles();  //returns list of articles with words from headline search input in headline
         } else if (keywordSearchInput == null) {
-            currentArticleDisplayList = keywordArticles();
+            currentArticleDisplayList = keywordArticles(); //returns list of articles with keywords that match words in keywordSearchInput
         } else {
-            currentArticleDisplayList = doubleSearchArticles();
+            currentArticleDisplayList = doubleSearchArticles();  //returns articles that have both the above appropriate headlines and keywords
         }
-        printArticles();
+        printArticles(); //prints currentArticleDisplayList;
     }
 
     private void printArticles() {
