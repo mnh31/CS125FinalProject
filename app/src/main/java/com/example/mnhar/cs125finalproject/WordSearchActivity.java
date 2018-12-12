@@ -32,7 +32,7 @@ import org.json.*;
 
 import com.example.mnhar.cs125finalproject.Article;
 
-public class SearchActivity extends AppCompatActivity {
+public class WordSearchActivity extends AppCompatActivity {
 
     //An array of the name of the months. First element is not used so that index of element matches the month number.
     private String[] monthArray = new String[]{" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -53,26 +53,25 @@ public class SearchActivity extends AppCompatActivity {
     private String year;
     private Button searchButton;
     private EditText search;
-    private String month;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestQueue = Volley.newRequestQueue(this);
 
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_word_search);
 
-        linearLayout = findViewById(R.id.myLinearLayout);
-        textView = findViewById(R.id.textView);
-        textView2 = findViewById(R.id.textView2);
-        searchButton = findViewById(R.id.searchButton2);
-        search = findViewById(R.id.searchBox);
-        
+        linearLayout = findViewById(R.id.LinearLayout2);
+        textView = findViewById(R.id.textViewnew);
+        textView2 = findViewById(R.id.textView2new);
+
         Intent intent = getIntent();
         year = intent.getStringExtra("year_key"); // gets the year as an array from main activity
-        month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
+        String month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
         monthInt = Integer.parseInt(month);
         textView.setText(monthArray[monthInt] + ", " + year);
+        headlineSearchInput = intent.getStringExtra("headline");
+        headlineSearchInput = headlineSearchInput.toLowerCase();
         /*for (String year : yearArray) {
             for (String month : monthArray) {
                 //try catch for possible failed URL exception
@@ -83,41 +82,34 @@ public class SearchActivity extends AppCompatActivity {
         startApiCall(url);
         textView2.setTextSize(12);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                headlineSearchInput = search.getText().toString();
-                openSearchActivity();
-            }
-        });
 
     }
     private void startApiCall(String url) {
-            try {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.GET,
-                        url,
-                        (JSONObject) null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(final JSONObject response) {
-                                try {
-                                    apiCallDone(response);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+        try {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    (JSONObject) null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(final JSONObject response) {
+                            try {
+                                apiCallDone(response);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(final VolleyError error) {
-                        Log.e("JSON request error", error.toString());
-                    }
-                });
-                jsonObjectRequest.setShouldCache(false);
-                requestQueue.add(jsonObjectRequest);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(final VolleyError error) {
+                    Log.e("JSON request error", error.toString());
+                }
+            });
+            jsonObjectRequest.setShouldCache(false);
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void apiCallDone(JSONObject response) {
@@ -173,7 +165,12 @@ public class SearchActivity extends AppCompatActivity {
         if (headlineSearchInput == null) {
             currentArticleDisplayList = completeArticleList;
         } else {
-            currentArticleDisplayList = searchArticles();  //returns list of articles with words from headline search input in headline
+            List<Article> healineArticles = searchArticles();
+            List<Article> keywordAricles = keywordArticles();      //returns list of articles with words from headline search input in headline
+            List<Article> wantToDisplay = new ArrayList<>();
+            wantToDisplay.addAll(healineArticles);
+            wantToDisplay.addAll(keywordAricles);
+            currentArticleDisplayList  = wantToDisplay;
         }
         printArticles(); //prints currentArticleDisplayList;
     }
@@ -185,8 +182,9 @@ public class SearchActivity extends AppCompatActivity {
         for (Article article : completeArticleList) {
             String[] wordsToSearch = headlineSearchInput.split(" ");  //splitting the search box input upon space to search for individual words
             for (String word : wordsToSearch) {                     //for each word to search
-                if (article.headline.contains(word)) {              //if the headline contains the word
-                    returnList.add(article);                        //add the article to return list
+                String headlineToSearch = article.headline.toLowerCase();
+                if (headlineToSearch.contains(word)) {
+                    returnList.add(article);
                 }
             }
         }
@@ -212,9 +210,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void openSearchActivity() {
-        Intent intent = new Intent(this, WordSearchActivity.class);
+        Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("year_key", year);
-        intent.putExtra("month_key", month);
+        intent.putExtra("month_key", monthArray[monthInt]);
         intent.putExtra("headline", headlineSearchInput);
         startActivity(intent);
     }

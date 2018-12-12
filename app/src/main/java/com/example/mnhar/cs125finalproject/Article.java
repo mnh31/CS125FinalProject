@@ -32,7 +32,7 @@ public class Article {
         String[] keywords2 = new String[keywords1.length()];
         for (int i = 0; i < keywords1.length(); i++) {
             JSONObject keywordObj = keywords1.getJSONObject(i);
-            keywords2[i] = keywordObj.getString("value");
+            keywords2[i] = keywordObj.getString("value").toLowerCase();
         }
         keywords = keywords2;
 

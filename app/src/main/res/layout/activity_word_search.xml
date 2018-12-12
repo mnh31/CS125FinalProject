@@ -9,29 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/myLinearLayout">
+        android:id="@+id/LinearLayout2">
 
-        <EditText
-            android:id="@+id/searchBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text|textPersonName"
-            android:hint="Enter Search Here" />
 
-        <Button
-            android:id="@+id/searchButton2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Search" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView2new"
             android:layout_width="match_parent"
             android:layout_height="32dp" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewnew"
             android:layout_width="match_parent"
             android:layout_height="32dp" />
 
