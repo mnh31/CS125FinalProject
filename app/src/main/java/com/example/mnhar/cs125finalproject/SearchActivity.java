@@ -33,14 +33,13 @@ public class SearchActivity extends AppCompatActivity {
     //An array of the name of the months. First element is not used so that index of element matches the month number.
     private String[] monthArray = new String[]{" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     private TextView textView; // the TextView box on this activity
-    private TextView textView2; // copyright box. maybe remove this?
+    private TextView textView2;
     private String baseURL = "https://api.nytimes.com/svc/archive/v1/";
     private String urlEnding = ".json?api-key=dd1044029b4644999f1a7c225dafacca";
-    private List<Article> completeArticleList = new ArrayList<>();
-    private List<Article> currentArticleDisplayList = new ArrayList<>();
-    private String headlineSearchInput;
-    private String keywordSearchInput;
+    List<Article> articleList = new ArrayList<>();
+    List<JSONObject> jsonObjects = new ArrayList<>();
     private String url;
+    private String toPrint;
     private static RequestQueue requestQueue;
     private LinearLayout linearLayout;
     private int monthInt;
@@ -62,14 +61,15 @@ public class SearchActivity extends AppCompatActivity {
         String month = intent.getStringExtra("month_key"); // gets the month as an array from main activity
         monthInt = Integer.parseInt(month);
         textView.setText(monthArray[monthInt] + ", " + year);
+        /*for (String year : yearArray) {
+            for (String month : monthArray) {
+                //try catch for possible failed URL exception
+                urlList.add(baseURL + year + "/" + month + urlEnding);
+            }
+        }*/
         url = baseURL + year + "/" + month + urlEnding;
         startApiCall(url);
         textView2.setTextSize(12);
-
-
-        //Vasu, to implement the search function all you need to do is make two search boxes and a submit button that sets what
-        //is in those boxes to the variables "headlineSearchInput" for a headline Search and "keywordSearchInput" for a keyword search
-        //then you might have to do something like restart the activity to make only the wanted articles appear
 
     }
     private void startApiCall(String url) {
@@ -102,9 +102,10 @@ public class SearchActivity extends AppCompatActivity {
 
     private void apiCallDone(JSONObject response) {
         try {
-            textView2.setText(response.getString("copyright"));
+            toPrint = response.get("copyright").toString();
+            textView2.setText(toPrint);
             takeInInfoForArticles(response.getJSONObject("response").getJSONArray("docs"));
-            printInfoFromArticles();
+            printInfoFromAllArticles();
 
         } catch (JSONException ignored) {}
 
@@ -113,31 +114,17 @@ public class SearchActivity extends AppCompatActivity {
     private void takeInInfoForArticles(JSONArray articles){
         for (int i = 0; i < articles.length(); i++) {
             try {
-                completeArticleList.add(new Article(articles.getJSONObject(i)));
+                articleList.add(new Article(articles.getJSONObject(i)));
+                i += 2;
             } catch (Exception e) {
                 continue;
             }
         }
     }
 
-    //this function I made to be called before printArticles to determine what currentArticleDisplayList will be
-    private void printInfoFromArticles() {
-        if (headlineSearchInput == null && keywordSearchInput == null) {
-            currentArticleDisplayList = completeArticleList;
-        } else if (headlineSearchInput == null) {
-            currentArticleDisplayList = searchArticles();  //returns list of articles with words from headline search input in headline
-        } else if (keywordSearchInput == null) {
-            currentArticleDisplayList = keywordArticles(); //returns list of articles with keywords that match words in keywordSearchInput
-        } else {
-            currentArticleDisplayList = doubleSearchArticles();  //returns articles that have both the above appropriate headlines and keywords
-        }
-        printArticles(); //prints currentArticleDisplayList;
-    }
+    private void printInfoFromAllArticles() {
 
-    private void printArticles() {
-
-        // changed this from displaying all articles to whatever we decide "currentArticleDisplayList" is
-        for (Article article : currentArticleDisplayList) {
+        for (Article article : articleList) {
             TextView current = new TextView(this);
             String date = monthArray[monthInt] + " " + article.date + ", " + year;
             current.setLinksClickable(true);
@@ -157,65 +144,5 @@ public class SearchActivity extends AppCompatActivity {
             linearLayout.addView(headline);
             linearLayout.addView(current);
         }
-    }
-
-    //currently I have different variables for searching headline and searching keywords.
-    //this is the headline function. We can make them the same if we want
-    private List<Article> searchArticles() {
-        List<Article> returnList = new ArrayList<>();
-        for (Article article : completeArticleList) {
-            String[] wordsToSearch = headlineSearchInput.split(" ");  //splitting the search box input upon space to search for individual words
-            for (String word : wordsToSearch) {                     //for each word to search
-                if (article.headline.contains(word)) {              //if the headline contains the word
-                    returnList.add(article);                        //add the article to return list
-                }
-            }
-        }
-        return returnList;
-    }
-
-    //this is the keyword function
-    private List<Article> keywordArticles() {
-        List<Article> returnList = new ArrayList<>();
-        for (Article article : completeArticleList) {
-            String[] wordsToSearch = keywordSearchInput.split(" ");//splitting the search box input upon space to search for individual words
-            for (String word : wordsToSearch) {                     //for each word to search
-                for(String keyword : article.keywords) {            //for each keyword
-                    if (word.equalsIgnoreCase(keyword)              //if the keyword is equal to the word searched
-                            || keywordSearchInput.equalsIgnoreCase(keyword)) { //or if it is equal to the whole keyword search
-                        returnList.add(article);                    //add article to return list
-                    }
-                }
-            }
-        }
-        return returnList;
-    }
-
-    //this is the function for if they have both a keyword and headline Search;
-    private List<Article> doubleSearchArticles() {
-        List<Article> returnList = new ArrayList<>();
-        for (Article article : completeArticleList) {
-            String[] headlineSearch = headlineSearchInput.split(" ");        //splitting the headline search box input upon space to search for individual words
-            String[] keywordSearch = keywordSearchInput.split(" ");  //splitting the keyword search box input upon space to search
-            boolean matchHeadline = false;
-            boolean matchKeyword = false;
-            for (String word : keywordSearch) {
-                for(String keyword : article.keywords) {
-                    if (word.equalsIgnoreCase(keyword) //if a word they searched in keyword box is equal to a keyword
-                            || keywordSearchInput.equalsIgnoreCase(keyword)) { //or if the whole search is equal to a keyword
-                        matchKeyword = true; //set keyword boolean to true
-                    }
-                }
-            }
-            for (String word : headlineSearch) {  //for each word to search
-                if (article.headline.contains(word)) { //if the headline contains that word
-                    matchHeadline = true; //set headline boolean to true
-                }
-            }
-            if (matchHeadline && matchKeyword) { //if both headline and keyword booleans are true
-                returnList.add(article); //add it to the return list
-            }
-        }
-        return returnList;
     }
 }
