@@ -9,6 +9,9 @@ import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +33,8 @@ import com.example.mnhar.cs125finalproject.Article;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private Button searchButton;
+    private EditText searchThis;
     //An array of the name of the months. First element is not used so that index of element matches the month number.
     private String[] monthArray = new String[]{" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     private TextView textView; // the TextView box on this activity
@@ -48,8 +53,18 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        searchThis = findViewById(R.id.searchBox);
         requestQueue = Volley.newRequestQueue(this);
+
+
+        searchButton = (Button) findViewById(R.id.searchButton2);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                headlineSearchInput = searchThis.getText().toString();
+                keywordSearchInput = headlineSearchInput;
+            }
+        });
 
         setContentView(R.layout.activity_search);
 
